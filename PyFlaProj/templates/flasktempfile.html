@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>Document</title>
+</head>
+<body>
+
+  <section>
+      <form action = "/hit" method = "POST" enctype='application/json'>  
+      <article>  
+          {% if cards %}
+          <div display=inline-block>
+          {% for entry in cards %}
+          {% if entry["isDealer"]==False %}
+          <div>
+          <img src='{{url_for("static",filename=entry["imageName"])}}' width=100px height=150px border="2">
+          <input id="player" name="player[]" type="hidden" value='{{entry["drawnCard"]}}'/>
+          </div>
+          {%else%}
+          <div>
+          <input id="computer" name="computer[]" type="hidden" value='{{entry["drawnCard"]}}'/>
+          </div>
+          {% endif %} 
+          {% endfor %}
+          {% else %}
+          <p>We didn’t get any Cards :(</p>
+        </div>
+        {% endif %}
+        <br>
+        <div>
+        <!--<input id="jsonData" name="jsonData" type="hidden" value={{jsonObj}}/>-->
+        <input type="submit" value="Continue"/>
+        <input class="button" type="button" onclick="window.location.replace('/blackJack')" value="Play Again" />
+        </div>
+      </article>    
+    </form>     
+  </section>
+</body>
+</html>
+
+
+
+--------------
+@app.route("/blackJack",methods = ['POST', 'GET'])
+def getCards():
+    #cards=list(range(1,52))
+    try:
+        selectedCards=[]
+        imageName=[]
+        tmpData=[]
+        playerCoin=100
+        player=[]
+        computer=[]
+        isDealer=[False,False,True,True]
+        for i in range(0,4):
+            selectedCards.append(rc(cards))
+            cards.remove(selectedCards[i])
+            imageName.append(getImageName(selectedCards[i]))
+            if (isDealer[i]==True):
+                player=selectedCards[i]
+            else:
+                computer=selectedCards[i]   
+            tmpData.append(
+            {
+            'drawnCard':selectedCards[i],
+            'imageName': imageName[i],
+            'isDealer':isDealer[i]
+            })  
+            cardsDict = {1:player,2:computer}
+            total=getTotalCardValue(cardsDict)
+            blackJack=checkForBlackJack(total) 
+            for i in blackJack:
+                if blackJack[i]==1:
+                    print("player is the winner")
+                else:    
+                    print("player lost")    
+    except:
+        print ("error :", sys.exc_info()[0])
+    return render_template("index.html",cards=json.dumps(tmpData),playerCoin=json.dumps(playerCoin)) 
