@@ -8,9 +8,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='blackJack.css')}}" />
     <title>BlackJack</title>
 </head> 
-<script>var cards = JSON.parse('{{ cards|safe }}'); 
-        var playerCoin= JSON.parse('{{playerCoin|safe}}');
-        console.log("PlayerMoney:"+playerCoin);
+<script>var cards = JSON.parse('{{ data|safe }}'); 
+        console.log(cards); 
 </script>
 <body class="mainClass" onload="myFunction()"> 
   <section class="mainSection">

@@ -3,35 +3,26 @@ function myFunction(){
     console.log(cards)
     var count = Object.keys(cards).length;
     console.log(count);
-    console.log(cards[0].imageName);
-    var playerCoinInput = document.getElementById("playerCoin"); 
-    playerCoinInput.setAttribute("value",playerCoin);
-    for (i=0;i<count;i++)
-        if (cards[i].isDealer==false){
+    console.log(cards.player.length);
+    console.log(cards.player[0]);
+   
+    var destination = document.getElementById("mainDiv"); 
+    for (i=0;i<cards.imageName.length;i++){
             let newImageElement = document.createElement("img");
-            newImageElement.src="/static/"+cards[i].imageName;
+            newImageElement.src="/static/"+cards.imageName[i];
             newImageElement.setAttribute("class","imgClass");
-            let newPlayerElement = document.createElement("input");
-            newPlayerElement.setAttribute("name","player[]");
-            newPlayerElement.setAttribute("type", "hidden");
-            newPlayerElement.setAttribute("value",cards[i].drawnCard);
-            var destination = document.getElementById("mainDiv"); 
             destination.appendChild(newImageElement);
-            destination.appendChild(newPlayerElement);
-        }  
-        else 
-        {
-            let newImageElement = document.createElement("img");
-            newImageElement.src="/static/"+cards[i].imageName;
-            newImageElement.setAttribute("class","imgClass");
-            let newComputerElement = document.createElement("input");
-            newComputerElement.setAttribute("name","computer[]");
-            newComputerElement.setAttribute("type", "hidden");
-            newComputerElement.setAttribute("value",cards[i].drawnCard);
-            var destination = document.getElementById("mainDiv");
-            destination.appendChild(newImageElement);
-            destination.appendChild(newComputerElement);
         }
+    let newPlayerElement = document.createElement("input");
+    newPlayerElement.setAttribute("name","player[]");
+    newPlayerElement.setAttribute("type", "hidden");
+    newPlayerElement.setAttribute("value",cards.player);
+    destination.appendChild(newPlayerElement);
+    let newComputerElement = document.createElement("input");
+    newComputerElement.setAttribute("name","computer[]");
+    newComputerElement.setAttribute("type", "hidden");
+    newComputerElement.setAttribute("value",cards.computer);
+    destination.appendChild(newComputerElement);
 }
 
 function hitAgainFunction(){
