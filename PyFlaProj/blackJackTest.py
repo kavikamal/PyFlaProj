@@ -57,12 +57,11 @@ def result():
     if request.method == 'POST':
         player = request.form.getlist('player[]')
         computer= request.form.getlist('computer[]')
-        playerCoin= request.form.get('playerCoin')
         player.append(rc(cards))
         computer.append(rc(cards))
         cardsDict = {1:player,2:computer}
         total=getTotalCardValue(cardsDict)
-    return render_template("second.html",data = total)
+    return render_template("second.html",data=json.dumps(total))
 
 def getImageName(cardNo):
     if cardNo>0 and cardNo<14:
@@ -103,7 +102,6 @@ def getTotalCardValue(cards):
         if total>21:
             total-=10
     return total
-         
             
 if __name__ == "__main__":
     app.run()
