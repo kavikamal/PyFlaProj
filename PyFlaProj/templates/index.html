@@ -7,10 +7,9 @@
     <script type="text/javascript" src="{{ url_for('static', filename='blackJack.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='blackJack.css')}}" />
     <title>BlackJack</title>
+    <script>var cards = JSON.parse('{{ data|safe }}');</script>
 </head> 
-<script>var cards = JSON.parse('{{ data|safe }}'); 
-        console.log(cards); 
-</script>
+
 <body class="mainClass" onload="myFunction()"> 
   <section class="mainSection">
       <form name="form1" action = "/hit" method = "POST" enctype='application/json'>  
@@ -19,10 +18,15 @@
        <h1>BlackJack</h1> 
           <div id="mainDiv" display=inline-block></div>
           <br>
+          {% if data %}
           <div id="buttonDiv">
-            <input type="submit" value="Hit" onclick="hitAgainFunction()"/>
+            <input type="submit" value="Hit?" onclick="hitAgainFunction()"/>
+            <input type="submit" value="Surrender" onclick="surrenderFunction()"/>
             <input class="button" type="button" onclick="window.location.replace('/blackJack')" value="Play Again" />
           </div>
+          {% else %}
+            <input class="button" type="button" onclick="window.location.replace('/blackJack')" value="Start the Game" />
+          {% endif %}
       </article>    
     </form>     
   </section>

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from random import choice as rc
-
+import sys
 import itertools 
 import json
 
@@ -8,6 +8,10 @@ import json
 app = Flask(__name__)
 #CORS(app)
 cards=list(range(1,52)) 
+
+@app.route("/",methods = ['GET'])
+def firstPage():
+    return render_template("index.html")
 
 @app.route("/blackJack",methods = ['POST', 'GET'])
 def getCards():
@@ -26,6 +30,7 @@ def getCards():
         playerTotal=getTotalCardValue(playerHand)
         #If players total is less than 21 then select computer cards
         if playerTotal<21:
+            #Computer Hand
             computerHand.append(rc(cards))
             cards.remove(computerHand[0])
             imageName.append(getImageName(computerHand[0]))
@@ -47,21 +52,25 @@ def getCards():
         elif playerTotal>21:
             msg="Computer Won"    
         data.update({"msg":msg})  
-    except:
+    except ImportError:
         print("error :",sys.exc_info()[0])
-    #return render_template("index.html",cards=json.dumps(tmpData),msg=json.dumps(msg)) 
     return render_template("index.html",data=json.dumps(data)) 
 
 @app.route('/hit', methods = ['POST', 'GET'])
 def result():
+    playerTotal=0
+    computerTotal=0
     if request.method == 'POST':
         player = request.form.getlist('player[]')
         computer= request.form.getlist('computer[]')
         player.append(rc(cards))
         computer.append(rc(cards))
-        cardsDict = {1:player,2:computer}
-        total=getTotalCardValue(cardsDict)
-    return render_template("second.html",data=json.dumps(total))
+        print("player",player)
+        playerTotal=getTotalCardValue(player)
+        computerTotal=getTotalCardValue(computer)
+    data={"player":playerTotal,"computer":computerTotal}
+    print("data",data)
+    return render_template("second.html",data=json.dumps(data))
 
 def getImageName(cardNo):
     if cardNo>0 and cardNo<14:
@@ -91,6 +100,7 @@ def getTotalCardValue(cards):
     total=0
     for i in cards:
         tmpCardValue=getCardValue(int(i))
+        print(tmpCardValue)
         if (tmpCardValue==1):
             acesCount+=1
             total=total+11
@@ -101,7 +111,8 @@ def getTotalCardValue(cards):
     for x in range(acesCount):  
         if total>21:
             total-=10
+    print("total",total)    
     return total
             
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
