@@ -4,17 +4,23 @@ function myFunction(){
     var count = Object.keys(cards).length;
     console.log(count);
     console.log("Hello Blackjack");
-    console.log(cards.player.length);
+    console.log(cards.playerCoin);
     console.log(cards.player[0]);
    
     var destination = document.getElementById("mainDiv"); 
+    var h = document.createElement("p")
+    var t = document.createTextNode(cards.msg); 
+    var c=document.getElementById("playerCoin");
+    c.value=cards.playerCoin;
+    h.appendChild(t); 
+    destination.appendChild(h);
     for (i=0;i<cards.imageName.length-1;i++){
             if (i%2==0){
-                var h = document.createElement("h4") // Create a <h1> element
+                h = document.createElement("h4") // Create a <h1> element
                 if (i+2==cards.imageName.length) 
-                     var t = document.createTextNode("Dealer Card");  
+                    t = document.createTextNode("Dealer Card");  
                 else              
-                     var t = document.createTextNode("Player Cards");     // Create a text node
+                    t = document.createTextNode("Player Cards");     // Create a text node
                 h.appendChild(t); 
                 destination.appendChild(h);
             }
@@ -40,7 +46,6 @@ function myFunction(){
 }
 
 function hitAgainFunction(){
-    var playerCoinInput = document.getElementById("playerCoin"); 
-    playerCoinInput.setAttribute("value",(playerCoin-10));
+    
     document.getElementById('form1').submit();
 }

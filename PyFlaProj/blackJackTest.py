@@ -3,10 +3,10 @@ from random import choice as rc
 import sys
 import itertools 
 import json
-
+from flask_cors import CORS
 
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 cards=list(range(1,52)) 
 
 @app.route("/",methods = ['GET'])
@@ -16,10 +16,16 @@ def firstPage():
 @app.route("/blackJack",methods = ['POST', 'GET'])
 def getCards():
     try:
+        cards=list(range(1,52)) 
         playerHand=[]
         computerHand=[]
         imageName=[]
         data={}
+        # if (request.form.playerCoin):
+        #     playerCoin=int(request.form.playerCoin)-10
+        # else:
+        #     playerCoin=90
+        msg="No Message"
         #Player Hand
         playerHand.append(rc(cards))
         cards.remove(playerHand[0])
@@ -45,16 +51,17 @@ def getCards():
                computerHand[0]= rc(cards)
                cards.remove(computerHand[0])
                computerHand[1]= rc(cards)
-            data={"player":playerHand,"computer":computerHand,"imageName":imageName}
             msg="Hit?" 
         elif playerTotal==21: 
             msg="You won"  
         elif playerTotal>21:
-            msg="Computer Won"    
-        data.update({"msg":msg})  
+            msg="Computer Won" 
+        data={"player":playerHand,"computer":computerHand,"imageName":imageName,"msg":msg}       
+        
     except ImportError:
         print("error :",sys.exc_info()[0])
-    return render_template("index.html",data=json.dumps(data)) 
+    return jsonify(data)
+    #return render_template("index.html",data=json.dumps(data)) 
 
 @app.route('/hit', methods = ['POST', 'GET'])
 def result():
@@ -65,13 +72,12 @@ def result():
         computer= request.form.getlist('computer[]')
         player.append(rc(cards))
         computer.append(rc(cards))
-        print("player",player)
         playerTotal=getTotalCardValue(player)
         computerTotal=getTotalCardValue(computer)
     data={"player":playerTotal,"computer":computerTotal}
-    print("data",data)
     return render_template("second.html",data=json.dumps(data))
 
+#Get the ImageName 
 def getImageName(cardNo):
     if cardNo>0 and cardNo<14:
            imageName=str(cardNo) + "_of_spades.png"
@@ -100,7 +106,6 @@ def getTotalCardValue(cards):
     total=0
     for i in cards:
         tmpCardValue=getCardValue(int(i))
-        print(tmpCardValue)
         if (tmpCardValue==1):
             acesCount+=1
             total=total+11
@@ -110,8 +115,7 @@ def getTotalCardValue(cards):
             total=total+tmpCardValue
     for x in range(acesCount):  
         if total>21:
-            total-=10
-    print("total",total)    
+            total-=10   
     return total
             
 if __name__ == "__main__":

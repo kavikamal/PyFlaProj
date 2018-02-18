@@ -14,19 +14,26 @@
   <section class="mainSection">
       <form name="form1" action = "/hit" method = "POST" enctype='application/json'>  
       <article class="article1">  
-      <input id="playerCoin" name="playerCoin" type="hidden" />
-       <h1>BlackJack</h1> 
-          <div id="mainDiv" display=inline-block></div>
-          <br>
-          {% if data %}
-          <div id="buttonDiv">
-            <input type="submit" value="Hit?" onclick="hitAgainFunction()"/>
-            <input type="submit" value="Surrender" onclick="surrenderFunction()"/>
-            <input class="button" type="button" onclick="window.location.replace('/blackJack')" value="Play Again" />
-          </div>
-          {% else %}
-            <input class="button" type="button" onclick="window.location.replace('/blackJack')" value="Start the Game" />
-          {% endif %}
+      <h1>BlackJack</h1> 
+      <div>
+       <p>Remaining Player Coins: 
+        <input id="playerCoin" name="playerCoin" type="text" disabled value="100"/>
+        </p>
+        <br>
+        <br>
+      </div>
+      <div id="mainDiv" display=inline-block></div>
+        <br>
+          
+        {% if data %}
+      <div id="buttonDiv">
+          <input type="submit" value="Hit?" onclick="hitAgainFunction()"/>
+          <input type="submit" value="Surrender" onclick="surrenderFunction()"/>
+          <input class="button" type="button" onclick="window.location.replace('/blackJack')" value="Play Again" />
+      </div>
+        {% else %}
+          <input class="button" type="button" onclick="window.location.replace('/blackJack')" value="Start the Game" />
+        {% endif %}
       </article>    
     </form>     
   </section>
